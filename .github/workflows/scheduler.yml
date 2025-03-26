@@ -11,19 +11,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      # - uses: pnpm/action-setup@v4
 
-      - name: Set node
-        uses: actions/setup-node@v4
+      # - name: Set node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: lts/*
+
+      # - run: corepack enable && pnpm i
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: lts/*
-
-      - run: corepack enable && pnpm i
-
+          bun-version: latest
+      - run: bun i
       - name: Fetch api data
         env:
           XIAOTIE_TOKEN: ${{ secrets.XIAOTIE_TOKEN }}
-        run: npm run start
+        run: bun src/index.ts
 
       - name: Commit
         uses: EndBug/add-and-commit@v9
