@@ -26,6 +26,7 @@ jobs:
           bun-version: latest
           # Domestic Acceleration
           bun-download-url: https://get-github.hexj.org/download/oven-sh/bun/releases/latest/download/bun-linux-x64.zip
+      - run: git pull
       - run: bun i
       - name: Fetch api data
         env:
