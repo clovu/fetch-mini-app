@@ -2327,7 +2327,8 @@
             "19": true,
             "20": true,
             "21": true,
-            "22": true
+            "22": true,
+            "23": true
           }
         }
       }
@@ -3414,7 +3415,18 @@
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -4862,7 +4874,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -7306,7 +7323,14 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true
           }
         }
       }
@@ -9617,7 +9641,13 @@
             "13": true,
             "14": true,
             "15": true,
-            "16": true
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -10868,7 +10898,18 @@
           "2025-03-26": {
             "1": true,
             "2": true,
-            "3": true
+            "3": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -12161,7 +12202,12 @@
             "15": true,
             "16": true,
             "17": true,
-            "18": true
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -15850,7 +15896,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -17219,7 +17270,13 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "22": true,
+            "23": true
+          },
+          "2025-03-27": {
+            "1": true,
+            "2": true
           }
         }
       }
@@ -18423,7 +18480,8 @@
             "19": true,
             "20": true,
             "21": true,
-            "22": true
+            "22": true,
+            "23": true
           }
         }
       }
@@ -22433,7 +22491,8 @@
             "16": true,
             "17": true,
             "18": true,
-            "19": true
+            "19": true,
+            "20": true
           }
         }
       }
@@ -31637,7 +31696,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -33990,7 +34054,20 @@
             "1": true,
             "2": true,
             "3": true,
-            "4": true
+            "4": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
+          },
+          "2025-03-27": {
+            "1": true
           }
         }
       }
@@ -35385,7 +35462,9 @@
             "1": true,
             "2": true,
             "3": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true
           }
         }
       }
@@ -36791,7 +36870,15 @@
             "2": true,
             "3": true,
             "4": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true
           }
         }
       }
@@ -39204,7 +39291,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       },
@@ -39602,7 +39694,9 @@
           },
           "2025-03-26": {
             "2": true,
-            "3": true
+            "3": true,
+            "13": true,
+            "14": true
           }
         }
       }
@@ -43116,7 +43210,12 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -44321,7 +44420,12 @@
             "6": true,
             "8": true,
             "9": true,
-            "10": true
+            "10": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       },
@@ -46916,7 +47020,12 @@
             "3": true,
             "4": true,
             "5": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -48289,7 +48398,12 @@
             "14": true,
             "15": true,
             "16": true,
-            "17": true
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -49528,7 +49642,13 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -50904,7 +51024,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -52230,7 +52355,12 @@
             "15": true,
             "16": true,
             "17": true,
-            "18": true
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -56565,7 +56695,11 @@
           "2025-03-26": {
             "1": true,
             "2": true,
-            "3": true
+            "3": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true
           }
         }
       },
@@ -58761,6 +58895,7 @@
             "9": true,
             "10": true,
             "11": true,
+            "13": true,
             "18": true,
             "19": true,
             "20": true,
@@ -61336,7 +61471,13 @@
             "7": true,
             "8": true,
             "9": true,
-            "10": true
+            "10": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -62714,7 +62855,17 @@
             "9": true,
             "10": true,
             "11": true,
-            "12": true
+            "12": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       },
@@ -63815,7 +63966,11 @@
             "1": true,
             "2": true,
             "3": true,
-            "4": true
+            "4": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true
           }
         }
       },
@@ -64297,7 +64452,12 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       },
@@ -65948,7 +66108,17 @@
             "3": true,
             "4": true,
             "5": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -67193,7 +67363,11 @@
             "8": true,
             "9": true,
             "10": true,
-            "11": true
+            "11": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true
           }
         }
       }
@@ -69487,7 +69661,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -70925,6 +71104,19 @@
             "21": true,
             "22": true,
             "23": true
+          },
+          "2025-03-26": {
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -72330,7 +72522,12 @@
             "15": true,
             "16": true,
             "17": true,
-            "18": true
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -73600,6 +73797,8 @@
             "7": true,
             "8": true,
             "9": true,
+            "13": true,
+            "14": true,
             "15": true,
             "16": true,
             "17": true,
@@ -74921,7 +75120,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -78441,7 +78645,13 @@
             "8": true,
             "9": true,
             "10": true,
-            "11": true
+            "11": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -80506,7 +80716,11 @@
             "1": true,
             "2": true,
             "3": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true
           }
         }
       }
@@ -82757,12 +82971,16 @@
             "3": true,
             "4": true,
             "5": true,
+            "13": true,
+            "14": true,
             "15": true,
             "16": true,
             "17": true,
             "18": true,
             "19": true,
-            "20": true
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -84005,6 +84223,12 @@
             "10": true,
             "11": true,
             "12": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
             "19": true,
             "20": true,
             "21": true,
@@ -85440,6 +85664,11 @@
             "6": true,
             "7": true,
             "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
             "18": true,
             "19": true,
             "20": true,
@@ -86673,7 +86902,11 @@
             "2": true,
             "3": true,
             "4": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true
           }
         }
       }
@@ -88135,7 +88368,12 @@
             "5": true,
             "6": true,
             "7": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -89531,7 +89769,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -90953,7 +91196,17 @@
             "5": true,
             "6": true,
             "8": true,
-            "9": true
+            "9": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       },
@@ -91175,7 +91428,8 @@
           "2025-03-26": {
             "2": true,
             "3": true,
-            "4": true
+            "4": true,
+            "13": true
           }
         }
       }
@@ -92649,7 +92903,8 @@
             "15": true,
             "16": true,
             "17": true,
-            "18": true
+            "18": true,
+            "19": true
           }
         }
       }
@@ -93606,7 +93861,18 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
+          },
+          "2025-03-27": {
+            "12": true
           }
         }
       }
@@ -97075,6 +97341,10 @@
           },
           "2025-03-26": {
             "1": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
             "19": true,
             "20": true,
             "21": true,
@@ -98496,7 +98766,14 @@
             "6": true,
             "7": true,
             "8": true,
-            "9": true
+            "9": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true
           }
         }
       }
@@ -100836,7 +101113,12 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -103888,7 +104170,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -105104,7 +105391,12 @@
             "1": true,
             "2": true,
             "3": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -106506,7 +106798,13 @@
             "7": true,
             "8": true,
             "9": true,
-            "10": true
+            "10": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -107918,7 +108216,8 @@
             "19": true,
             "20": true,
             "21": true,
-            "22": true
+            "22": true,
+            "23": true
           },
           "2025-03-27": {
             "1": true,
@@ -107927,7 +108226,9 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "12": true
           }
         }
       }
@@ -109358,6 +109659,7 @@
             "15": true,
             "16": true,
             "17": true,
+            "18": true,
             "19": true,
             "20": true,
             "21": true,
@@ -110633,7 +110935,13 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -112968,7 +113276,12 @@
             "1": true,
             "2": true,
             "3": true,
-            "4": true
+            "4": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -114156,7 +114469,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -115286,7 +115604,12 @@
             "3": true,
             "4": true,
             "5": true,
-            "6": true
+            "6": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true
           }
         }
       }
@@ -117795,7 +118118,15 @@
             "1": true,
             "2": true,
             "3": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true
           }
         }
       }
@@ -120096,7 +120427,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -121284,7 +121620,15 @@
             "8": true,
             "9": true,
             "10": true,
-            "11": true
+            "11": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true
           }
         }
       }
@@ -122643,7 +122987,13 @@
             "1": true,
             "2": true,
             "3": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -125109,7 +125459,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -126317,7 +126672,12 @@
           },
           "2025-03-26": {
             "2": true,
-            "3": true
+            "3": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -127514,6 +127874,10 @@
             "6": true,
             "7": true,
             "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
             "17": true,
             "18": true,
             "19": true,
@@ -129807,7 +130171,17 @@
             "4": true,
             "5": true,
             "6": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -130872,7 +131246,13 @@
             "13": true,
             "14": true,
             "15": true,
-            "16": true
+            "16": true,
+            "17": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true
           }
         }
       }
@@ -132104,7 +132484,9 @@
             "16": true,
             "17": true,
             "18": true,
-            "19": true
+            "19": true,
+            "20": true,
+            "21": true
           }
         }
       }
@@ -133199,7 +133581,11 @@
             "23": true
           },
           "2025-03-26": {
-            "1": true
+            "1": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true
           }
         }
       }
@@ -135393,7 +135779,11 @@
           "2025-03-26": {
             "2": true,
             "3": true,
-            "4": true
+            "4": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -136726,6 +137116,11 @@
             "9": true,
             "10": true,
             "11": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
             "18": true,
             "19": true,
             "20": true,
@@ -137807,7 +138202,13 @@
             "3": true,
             "4": true,
             "5": true,
-            "8": true
+            "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
       }
@@ -139076,6 +139477,10 @@
             "4": true,
             "5": true,
             "8": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
             "19": true,
             "20": true,
             "21": true,
@@ -140154,7 +140559,8 @@
             "19": true,
             "20": true,
             "21": true,
-            "22": true
+            "22": true,
+            "23": true
           }
         }
       }
@@ -142550,10 +142956,16 @@
             "8": true,
             "9": true,
             "10": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
             "19": true,
             "20": true,
             "21": true,
-            "22": true
+            "22": true,
+            "23": true
           }
         }
       }
@@ -142937,7 +143349,15 @@
             "10": true,
             "11": true,
             "12": true,
-            "13": true
+            "13": true,
+            "14": true,
+            "15": true,
+            "18": true,
+            "19": true,
+            "20": true,
+            "21": true,
+            "22": true,
+            "23": true
           }
         }
       }
@@ -143779,6 +144199,7 @@
           },
           "2025-03-26": {
             "1": true,
+            "14": true,
             "15": true,
             "16": true,
             "17": true,
@@ -144995,6 +145416,8 @@
             "10": true,
             "11": true,
             "12": true,
+            "13": true,
+            "17": true,
             "18": true,
             "19": true,
             "20": true,
@@ -145319,7 +145742,9 @@
             "12": true,
             "13": true,
             "14": true,
-            "15": true
+            "15": true,
+            "16": true,
+            "17": true
           }
         }
       }
@@ -145377,9 +145802,30 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
+      }
+    }
+  },
+  "20743": {
+    "store": {
+      "id": "20743",
+      "name": "增城·中新中福路店",
+      "address": "广东省广州市增城区中新镇中福路31号",
+      "city": "广州市"
+    },
+    "tables": {
+      "35084": {
+        "id": "35084",
+        "address": "V801 一帆风顺",
+        "type": "棋牌",
+        "appointRecords": {}
       }
     }
   },
@@ -145664,9 +146110,31 @@
             "23": true
           },
           "2025-03-26": {
-            "1": true
+            "1": true,
+            "13": true,
+            "14": true,
+            "15": true,
+            "16": true,
+            "17": true,
+            "18": true
           }
         }
+      }
+    }
+  },
+  "21253": {
+    "store": {
+      "id": "21253",
+      "name": "广东广州·天河灵山东路店",
+      "address": "广东省广州市天河区灵山东路16号1栋201",
+      "city": "广州市"
+    },
+    "tables": {
+      "36211": {
+        "id": "36211",
+        "address": "V801 一帆风顺",
+        "type": "棋牌",
+        "appointRecords": {}
       }
     }
   },
@@ -145800,7 +146268,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -146115,7 +146588,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -146482,7 +146960,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       },
@@ -146839,7 +147322,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
@@ -146977,7 +147465,12 @@
             "4": true,
             "5": true,
             "6": true,
-            "7": true
+            "7": true,
+            "8": true,
+            "9": true,
+            "10": true,
+            "11": true,
+            "12": true
           }
         }
       }
