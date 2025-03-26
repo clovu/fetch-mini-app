@@ -1,4 +1,4 @@
-import { isEmptyArr, mergeDetail, recordAppointment } from '../util'
+import { isEmptyArr, mergeDetail, recordAppointment, sleep } from '../util'
 import dayjs from 'dayjs'
 import CryptoJs from 'crypto-js'
 import timezone from 'dayjs/plugin/timezone'
@@ -57,6 +57,7 @@ function request(bizContent: object, method: string) {
     headers: {
       'Content-Type': 'application/json',
     },
+    verbose: true
   })
 }
 
@@ -80,6 +81,8 @@ async function getKoStore() {
       billiardsFrom: 'TXY'
     }
 
+    // 服务器喘口气
+    await sleep(200)
     const result = await request(bizContent, STORE_LIST_METHOD)
 
     const resp: any = await result.json()
@@ -110,6 +113,8 @@ async function getKoStore() {
 async function getBilliardsTable(id: string) {
   spinner.start(`Fetch: Get store table by ${id}}`)
 
+  // 服务器喘口气
+  await sleep(200)
   const result = await request({ id: id + '' }, STORE_METHOD)
   const resp: any = await result.json()
   const json = JSON.parse(resp.bizContent)

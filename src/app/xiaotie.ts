@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import qs from 'qs'
 import dayjs from 'dayjs'
 import dotenv from 'dotenv'
-import { mergeDetail, recordAppointment } from '../util'
+import { mergeDetail, recordAppointment, sleep } from '../util'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import { env } from 'node:process'
@@ -63,6 +63,8 @@ async function getXiaotieStores() {
     paramJson.skip += 10
     const params = qs.stringify(paramJson)
 
+    // 服务器喘口气
+    await sleep(200)
     const resp = await fetch(`${BASE_URL}${URL}?${params}`, {
       method: 'GET',
       headers: {
@@ -71,8 +73,9 @@ async function getXiaotieStores() {
         timestamp: timestamp.toString(),
         'xi-app-id': '0a60f00b28c849d3ac529994f98b825f'
       },
-      hostname: 'table-api.xironiot.com'
+      hostname: 'table-api.xironiot.com',
     })
+
 
     const json = await resp.json() as any
 
@@ -102,6 +105,8 @@ async function getTableById(id: string) {
 
   const { md5: sign, timestamp } = getSign()
 
+  // 服务器喘口气
+  await sleep(200)
   const resp = await fetch(`${BASE_URL}${URL}?node_id=${id}`, {
     method: 'GET',
     headers: {

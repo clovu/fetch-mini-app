@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js'
-import { isEmptyArr, mergeDetail } from '../util'
+import { isEmptyArr, mergeDetail, sleep } from '../util'
+import fetch from 'node-fetch'
 import dayjs from 'dayjs'
 import { env } from 'node:process'
 import timezone from 'dayjs/plugin/timezone'
@@ -53,6 +54,8 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
       formData.set('page', pageNum)
       formData.set('limit', 20)
 
+      // 服务器喘口气
+      await sleep(200)
       const resp = await fetch(BASE_URL + URI, {
         method: 'POST',
         headers: {
@@ -103,6 +106,8 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
 
     const records: Table[] = []
 
+    // 服务器喘口气
+    await sleep(200)
     const resp = await fetch(BASE_URL + URI, {
       method: 'POST',
       headers: {
@@ -110,7 +115,7 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
         'wxappid': appId,
         'version': appVersion
       },
-      body: formData
+      body: formData,
     })
 
     spinner.succeed(`Fetch: Successfully obtained Table by ${sid}`)
@@ -124,7 +129,7 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
 
       p.forEach((place: any) => {
         spinner.start(`Process: ${place.title}`)
-        
+
         const appointRecords: Record<string, Record<string, boolean>> = {}
         let today = dayjs().format('YYYY-MM-DD')
 
@@ -138,7 +143,7 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
           if (!timeline.val) return
 
           appointRecords[today] ??= {}
-          appointRecords[today][timeline.key] = timeline.val
+          appointRecords[today][timeline.key + ':00'] = timeline.val
         })
 
         records.push({
