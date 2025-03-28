@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS appoint_record (
   table_id NVARCHAR NOT NULL, -- 台桌ID
   store_id NVARCHAR NOT NULL, -- 商铺ID
   use_time INTEGER NOT NULL, -- 使用时间
+  duration FLOAT NOT NULL default 0.5,
   PRIMARY KEY (table_id, store_id, use_time)
 );
 `
