@@ -94,10 +94,13 @@ export default function handler(
   res: NextApiResponse<ResponseData>
 ) {
   db.serialize(async () => {
-    const datasource: string[][] = []
     // 查询有哪些品牌
     const list = await getBrandList()
+    // 构造workBook
+    const workBook = XLSX.utils.book_new();
+
     for (const brand of list) {
+      const datasource: string[][] = []
       const columns = await getBrandDate(brand.brand_id)
       const stores = await getStoreByBrand(brand.brand_id)
       // 查看品牌日期列
@@ -109,14 +112,11 @@ export default function handler(
 
       datasource.push([])
       datasource.push([])
+
+      const jsonWorkSheet = XLSX.utils.aoa_to_sheet(datasource);
+      XLSX.utils.book_append_sheet(workBook, jsonWorkSheet, brand.brand)
     } 
-
-    const jsonWorkSheet = XLSX.utils.aoa_to_sheet(datasource);
-    // 构造workBook
-    const workBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workBook, jsonWorkSheet)
     const buffer = XLSX.write(workBook, { type: 'buffer', bookType: 'xlsx' });
-
 
     res.setHeader('Content-Disposition', 'attachment; filename="data.xlsx"');
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
