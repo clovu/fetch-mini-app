@@ -42,21 +42,21 @@ export async function mergeDetail(
         const tableResp = await getTable(sid)
         return [sid, tableResp] as const
       } catch (err) {
-        console.error('store-id = ' + sid);
+        console.error('store-id = ' + sid, err);
 
         throw err
       }
     })
   )
   const storeTableRecords = Object.fromEntries(tables)
-
+  
   recordValues.forEach(it => {
     const tables = storeTableRecords[it.store.id]
     if (!tables) return
-
+    
     tables.forEach(table => {
       it.tables[table.id] ??= table
-
+      
       for (const day in table.appointRecords) {
         const cacheAppoint = it.tables[table.id].appointRecords[day] ?? {}
         Object.assign(cacheAppoint, table.appointRecords[day])
@@ -65,6 +65,8 @@ export async function mergeDetail(
     })
 
   })
+
+
 
   return cache
 }

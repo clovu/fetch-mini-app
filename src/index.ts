@@ -67,17 +67,20 @@ import { AppointRecord, db, Store, StoreTable } from './db'
     insertTables(tableList)
 
     const insertAppoint = db.prepare(`
-      INSERT OR REPLACE INTO appoint_record (table_id, store_id, use_time)
-      VALUES ${tableList.map(it => '($table_id, $store_id, $use_time)').join(',')}
+      INSERT OR REPLACE INTO appoint_record (table_id, store_id, use_time, duration)
+      VALUES ${tableList.map(it => '($table_id, $store_id, $use_time, $duration)').join(',')}
     `)
 
     const insertAppoints = db.transaction((appoints) => {
-      for (const it of appoints)
+      for (const it of appoints){
+        if (isNaN(it.useTime))
         insertAppoint.run({
           $table_id: it.tableId,
           $store_id: it.storeId,
-          $use_time: it.useTime
+          $use_time: it.useTime,
+          $duration: it.duration
         });
+      }
     })
 
     insertAppoints(appointList)

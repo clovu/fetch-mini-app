@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 import { isEmptyArr, mergeDetail, sleep } from '../util'
-import fetch from 'node-fetch'
+// import fetch from 'node-fetch'
 import dayjs from 'dayjs'
 import { env } from 'node:process'
 import timezone from 'dayjs/plugin/timezone'
@@ -16,7 +16,7 @@ dayjs.tz()
 
 const baseURL = 'https://www.5laoban.com/'
 
-export async function noBossConvert(appId: string, appVersion: string, cache: Record<string, StoreDetail> = {}) {
+export async function noBossConvert(appId: string, appVersion: string, store: number, mid: number, cache: Record<string, StoreDetail> = {}) {
   const spinner = ora('Begin handle API of No BOSS').start()
   type Params = { path: string, timestamp: number }
 
@@ -48,8 +48,8 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
       const formData = new FormData()
 
       formData.set('timestamp_private', timestamp)
-      formData.set('store', 12393)
-      formData.set('mid', 8674)
+      formData.set('store', store)
+      formData.set('mid', mid)
       formData.set('citycode', 20)
       formData.set('page', pageNum)
       formData.set('limit', 20)
@@ -63,12 +63,14 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
           'wxappid': appId,
           'version': appVersion
         },
-        body: formData
+        body: formData,
+        verbose: true
       })
+
+
 
       const json: any = await resp.json()
       const list = json.result.list ?? []
-
       if (isEmptyArr(list))
         break
 
@@ -116,6 +118,7 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
         'version': appVersion
       },
       body: formData,
+      verbose: true
     })
 
     spinner.succeed(`Fetch: Successfully obtained Table by ${sid}`)
@@ -129,25 +132,38 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
 
       p.forEach((place: any) => {
         spinner.start(`Process: ${place.title}`)
+        // 111215
+        // console.log(place.pid === 111215);
+        // if (place.pid === 111215) {
+        //   debugger
+        // }
+
 
         const appointRecords: Record<string, Record<string, boolean>> = {}
         let today = dayjs().format('YYYY-MM-DD')
 
 
         place.timeline.forEach((timeline: any) => {
-          if (timeline.key === '次') {
+          const time = getTimeAndState(timeline)
+          if (time === '次') {
             today = dayjs().add(1, 'days').format('YYYY-MM-DD')
             return
           }
 
-          if (!timeline.val) return
+          if (!time) return
+
+
+          // if (!timeline.val) return
+
+          // appointRecords[today] ??= {}
+          // appointRecords[today][timeline.key + ':00'] = timeline.val
 
           appointRecords[today] ??= {}
-          appointRecords[today][timeline.key + ':00'] = timeline.val
+          appointRecords[today][time] = true
         })
 
         records.push({
-          id: place.aid + '',
+          id: place.pid + '',
           address: place.title,
           type: '棋牌',
           appointRecords
@@ -164,4 +180,16 @@ export async function noBossConvert(appId: string, appVersion: string, cache: Re
   spinner.stop()
 
   return result
+}
+
+function getTimeAndState(timeline: any) {
+  if (typeof timeline === 'object') {
+    if (timeline.key === '次') return '次'
+    if (!timeline.val) return
+
+    return timeline.key + ':00'
+  }
+
+  if (timeline === '次') return '次'
+  return timeline + ':00'
 }

@@ -59,5 +59,6 @@ export class AppointRecord {
     public tableId = '',
     public storeId = '',
     public useTime = 0,
+    public duration = 0.5
   ) { }
 }
