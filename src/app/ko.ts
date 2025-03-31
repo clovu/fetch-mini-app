@@ -133,7 +133,7 @@ async function getBilliardsTable(id: string) {
       return {
         id: it.poolTableId + '',
         address: it.tableName + '',
-        type: '中式台球',
+        type: '台球',
         appointRecords
       }
     })
