@@ -155,8 +155,8 @@ export async function xiaotieConvert(cache: Record<string, StoreDetail> = {}) {
 }
 
 const TypeConvertor: Record<number, string> = {
-  1: '中式台球',
-  2: '斯诺克',
+  1: '台球', //'中式台球',
+  2: '台球', //'斯诺克',
   3: '棋牌',
   4: '包房'
 }

@@ -25,7 +25,9 @@ import { AppointRecord, db, Store, StoreTable } from './db'
           }
           Object.values(table.appointRecords).forEach(it => {
           })
-          return new StoreTable(table.id, store.id, table.address, 0)
+          return new StoreTable(table.id, store.id, table.address,
+            table.type === '台球' ? 1 : table.type === '棋牌' ? 2 : 0,
+          )
         }))
         return new Store(store.id, brand, store.city, store.name, store.address)
       }
@@ -55,13 +57,14 @@ import { AppointRecord, db, Store, StoreTable } from './db'
     `)
 
     const insertTables = db.transaction((tables) => {
-      for (const it of tables)
+      for (const it of tables) {
         insertTable.run({
           $id: it.id,
           $store_id: it.store_id,
           $address: it.address,
-          $type: it.type,
+          $type: it.type//it.type === '台球' ? 1 : it.type === '棋牌' ? 2 : 0,
         });
+      }
     })
 
     insertTables(tableList)
@@ -72,16 +75,19 @@ import { AppointRecord, db, Store, StoreTable } from './db'
     `)
 
     const insertAppoints = db.transaction((appoints) => {
-      for (const it of appoints){
+      for (const it of appoints) {
         if (isNaN(it.useTime))
-        insertAppoint.run({
-          $table_id: it.tableId,
-          $store_id: it.storeId,
-          $use_time: it.useTime,
-          $duration: it.duration
-        });
+          insertAppoint.run({
+            $table_id: it.tableId,
+            $store_id: it.storeId,
+            $use_time: it.useTime,
+            $duration: it.duration
+          });
       }
     })
+
+    console.log('appointList = ', appointList.length);
+
 
     insertAppoints(appointList)
     // INSERT OR REPLACE INTO users (name, email)

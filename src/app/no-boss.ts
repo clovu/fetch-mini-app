@@ -191,8 +191,6 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
   spinner.info('No BOSS Processing completed')
   spinner.stop()
 
-  console.log(JSON.stringify(result));
-  
   return result
 }
 
