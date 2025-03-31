@@ -13,6 +13,7 @@ SELECT
         WHEN store.brand = 1 THEN '小铁'
         WHEN store.brand = 2 THEN 'KO'
         WHEN store.brand = 3 THEN '麻利友'
+        WHEN store.brand = 4 THEN '小野'
         ELSE '未知品牌'
     END AS brand
 FROM (SELECT distinct brand FROM store) store

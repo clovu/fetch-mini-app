@@ -93,8 +93,7 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
     return records
   }
 
-  async function getAreaList(sid: string) {
-    spinner.start(`Fetch: Get store table by ${sid}}`)
+  async function getArea(store: string, ssid?: number) {
 
     const URI = '/area/getplace4scene'
     const timestamp = new Date().getTime()
@@ -104,13 +103,13 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
     const formData = new FormData()
 
     formData.set('timestamp_private', timestamp)
-    formData.set('store', sid)
-
-    const records: Table[] = []
+    formData.set('store', store)
+    if (ssid)
+      formData.set('ssid', ssid)
 
     // 服务器喘口气
     await sleep(200)
-    const resp = await fetch(BASE_URL + URI, {
+    return await fetch(BASE_URL + URI, {
       method: 'POST',
       headers: {
         'applet-token': appletToken,
@@ -121,27 +120,46 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
       verbose: true
     })
 
-    spinner.succeed(`Fetch: Successfully obtained Table by ${sid}`)
-    spinner.start(`Sotre fetch successful...`)
+  }
 
+  async function getAreaList(store: string) {
+    spinner.start(`Fetch: Get store table by ${store}}`)
+
+    spinner.succeed(`Fetch: Successfully obtained Table by ${store}`)
+    spinner.start(`Sotre fetch successful...`)
+    const resp = await getArea(store)
     const json: any = await resp.json()
     const list = json.result.area ?? []
+    const records: Table[] = []
+
+
+    // 如果没有 ssid 并且 checkout_model 大于1，需要循环继续获取，可能分不同模式
+    /**
+     * "checkout_model": [
+            {
+                "id": xxx,
+                "title": "台球"
+            }
+        ],
+     */
+    const checkout_model = json.result.checkout_model ?? []
+    if (checkout_model.length > 1) {
+      for (let i = 1; i < checkout_model.length; i++) {
+        const { id, title } = checkout_model[i];
+        const resp = await getArea(store, id)
+        const json: any = await resp.json()
+        const area = json.result.area ?? []
+        list.push(...area)       
+      }
+   }
 
     list.forEach((it: any) => {
       const p = it.place ?? []
 
       p.forEach((place: any) => {
         spinner.start(`Process: ${place.title}`)
-        // 111215
-        // console.log(place.pid === 111215);
-        // if (place.pid === 111215) {
-        //   debugger
-        // }
-
-
         const appointRecords: Record<string, Record<string, boolean>> = {}
         let today = dayjs().format('YYYY-MM-DD')
-
 
         place.timeline.forEach((timeline: any) => {
           const time = getTimeAndState(timeline)
@@ -151,13 +169,6 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
           }
 
           if (!time) return
-
-
-          // if (!timeline.val) return
-
-          // appointRecords[today] ??= {}
-          // appointRecords[today][timeline.key + ':00'] = timeline.val
-
           appointRecords[today] ??= {}
           appointRecords[today][time] = true
         })
@@ -165,11 +176,12 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
         records.push({
           id: place.pid + '',
           address: place.title,
-          type: '棋牌',
+          type: it.title,
           appointRecords
         })
       })
     })
+
 
     return records
   }
@@ -179,6 +191,8 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
   spinner.info('No BOSS Processing completed')
   spinner.stop()
 
+  console.log(JSON.stringify(result));
+  
   return result
 }
 
