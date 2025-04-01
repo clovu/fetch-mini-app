@@ -68,22 +68,33 @@ function getStoreByBrand(brand: number) {
   })
 }
 
-
+// const STORE_APPINT_DURATION = `
+// SELECT
+//     strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) dt,
+//     -- duration 表示这个数据多久更新一次，1 表示一个小时
+//     COUNT(*) * duration AS record_count  FROM appoint_record
+// LEFT JOIN store ON appoint_record.store_id = store.id
+// WHERE store_id = ?
+// GROUP BY dt
+// ORDER BY dt
+// `
 const STORE_APPINT_DURATION = `
 SELECT
     strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) dt,
     -- duration 表示这个数据多久更新一次，1 表示一个小时
-    COUNT(*) * duration AS record_count  FROM appoint_record
-LEFT JOIN store ON appoint_record.store_id = store.id
-WHERE store_id = ?
+    COUNT(*) * duration AS record_count
+FROM appoint_record
+JOIN store ON appoint_record.store_id = store.id
+LEFT JOIN store_table on store.id = store_table.store_id and store_table.id = appoint_record.table_id
+WHERE appoint_record.store_id = ? AND store_table.type = ?
 GROUP BY dt
 ORDER BY dt
 `
 
-function getStoreAppintDurations(store_id: string) {
-  return new Promise<{ dt: string, record_count: number }[]>((resolve, reject) => {
+function getStoreAppintDurations(store_id: string, type: number) {
+  return new Promise<{ dt: string, record_count: number, table_type: string }[]>((resolve, reject) => {
     const stmt = db.prepare(STORE_APPINT_DURATION)
-    stmt.all<{ dt: string, record_count: number }>([store_id], (err, list) => {
+    stmt.all<{ dt: string, record_count: number, table_type: string }>([store_id, type], (err, list) => {
       if (err) reject(err)
       else resolve(list)
     })
@@ -105,10 +116,12 @@ export default function handler(
       const columns = await getBrandDate(brand.brand_id)
       const stores = await getStoreByBrand(brand.brand_id)
       // 查看品牌日期列
-      datasource.push([brand.brand, '店铺位置', ...columns])
+      datasource.push([brand.brand, '店铺位置', '类型', ...columns])
       for (const store of stores) {
-        const list = await getStoreAppintDurations(store.id)
-        datasource.push([store.name, store.address, ...list.map(it => it.record_count + '')])
+        const list = await getStoreAppintDurations(store.id, 1)
+        const list2 = await getStoreAppintDurations(store.id, 2)
+        datasource.push([store.name, store.address, '台球', ...list.map(it => it.record_count + '')])
+        datasource.push([store.name, store.address, '棋牌', ...list2.map(it => it.record_count + '')])
       }
 
       datasource.push([])
