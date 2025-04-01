@@ -7,7 +7,7 @@ import { AppointRecord, db, Store, StoreTable } from './db'
 
   const records: [string, Record<string, StoreDetail>][] = []
 
-  const tasks = appList.map(async ({ excutor, name, brand }) => {
+  const tasks = appList.map(async ({ excutor, name, brand, duration }) => {
     const list = await excutor({})
     const values = Object.values(list)
     const tableList: StoreTable[] = []
@@ -20,7 +20,7 @@ import { AppointRecord, db, Store, StoreTable } from './db'
           for (const dt in table.appointRecords) {
             const list = table.appointRecords[dt]
             for (const time in list) {
-              appointList.push(new AppointRecord(table.id, store.id, new Date(dt + ' ' + time).getTime() / 1e3))
+              appointList.push(new AppointRecord(table.id, store.id, new Date(dt + ' ' + time).getTime() / 1e3, duration))
             }
           }
           Object.values(table.appointRecords).forEach(it => {
