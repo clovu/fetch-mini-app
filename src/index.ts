@@ -76,7 +76,7 @@ import { AppointRecord, db, Store, StoreTable } from './db'
 
     const insertAppoints = db.transaction((appoints) => {
       for (const it of appoints) {
-        if (isNaN(it.useTime))
+        if (!isNaN(it.useTime))
           insertAppoint.run({
             $table_id: it.tableId,
             $store_id: it.storeId,
