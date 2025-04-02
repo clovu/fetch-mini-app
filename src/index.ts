@@ -3,6 +3,10 @@ import fs from 'fs/promises'
 import { appList } from './app'
 import { AppointRecord, db, Store, StoreTable } from './db'
 
+function createId(name: string, id: string) {
+  return name + '-' + id
+}
+
 (async () => {
 
   const tasks = appList.map(async ({ excutor, name, brand, duration }) => {
@@ -13,21 +17,22 @@ import { AppointRecord, db, Store, StoreTable } from './db'
 
     const storeList = values.map(
       ({ store, tables }) => {
+        const storeId = createId(name, store.id)
         tableList.push(...Object.values(tables).map(table => {
 
           for (const dt in table.appointRecords) {
             const list = table.appointRecords[dt]
             for (const time in list) {
-              appointList.push(new AppointRecord(table.id, store.id, new Date(dt + ' ' + time).getTime() / 1e3, duration))
+              appointList.push(new AppointRecord(createId(name, table.id), storeId, new Date(dt + ' ' + time).getTime() / 1e3, duration))
             }
           }
           Object.values(table.appointRecords).forEach(it => {
           })
-          return new StoreTable(table.id, store.id, table.address,
+          return new StoreTable(createId(name, table.id), storeId, table.address,
             table.type === '台球' ? 1 : table.type === '棋牌' ? 2 : 0,
           )
         }))
-        return new Store(store.id, brand, store.city, store.name, store.address)
+        return new Store(storeId, brand, store.city, store.name, store.address)
       }
     )
 

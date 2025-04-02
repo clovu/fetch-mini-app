@@ -16,13 +16,22 @@ export const appList = [
     duration: 0.5
   },
   {
-    excutor: (c: any) => noBossConvert('wx9be62f8bb91b02c7', '3.114.3', 12393, 8674, c),
+    excutor: (c: any) =>
+      noBossConvert(
+        'wx9be62f8bb91b02c7',
+        '3.114.3',
+        12393,
+        8674,
+        c,
+        (area, it) =>
+          String(area.title).indexOf('台') > -1 ? '台球' : '棋牌'
+        ,),
     name: 'maliyou',
     brand: 3,
     duration: 1
   },
   {
-    excutor: (c: any) => noBossConvert('wxe1ac0b5394d398d9', '3.114.3', 20548, 34412, c),
+    excutor: (c: any) => noBossConvert('wxe1ac0b5394d398d9', '3.114.3', 20548, 34412, c, (area) => area.title),
     name: 'xiaoye',
     brand: 4,
     duration: 1

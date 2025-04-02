@@ -158,5 +158,5 @@ const TypeConvertor: Record<number, string> = {
   1: '台球', //'中式台球',
   2: '台球', //'斯诺克',
   3: '棋牌',
-  4: '包房'
+  4: '棋牌'
 }

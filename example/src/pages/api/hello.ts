@@ -120,8 +120,10 @@ export default function handler(
       for (const store of stores) {
         const list = await getStoreAppintDurations(store.id, 1)
         const list2 = await getStoreAppintDurations(store.id, 2)
-        datasource.push([store.name, store.address, '台球', ...list.map(it => it.record_count + '')])
-        datasource.push([store.name, store.address, '棋牌', ...list2.map(it => it.record_count + '')])
+        if (list.length > 0)
+          datasource.push([store.name, store.address, '台球', ...list.map(it => it.record_count + '')])
+        if (list2.length > 0)
+          datasource.push([store.name, store.address, '棋牌', ...list2.map(it => it.record_count + '')])
       }
 
       datasource.push([])
@@ -129,7 +131,7 @@ export default function handler(
 
       const jsonWorkSheet = XLSX.utils.aoa_to_sheet(datasource);
       XLSX.utils.book_append_sheet(workBook, jsonWorkSheet, brand.brand)
-    } 
+    }
     const buffer = XLSX.write(workBook, { type: 'buffer', bookType: 'xlsx' });
 
     res.setHeader('Content-Disposition', 'attachment; filename="data.xlsx"');

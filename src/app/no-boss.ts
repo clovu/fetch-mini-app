@@ -16,7 +16,14 @@ dayjs.tz()
 
 const baseURL = 'https://www.5laoban.com/'
 
-export async function noBossConvert(appId: string, appVersion: string, store: number, mid: number, cache: Record<string, StoreDetail> = {}) {
+export async function noBossConvert(
+  appId: string,
+  appVersion: string,
+  store: number,
+  mid: number,
+  cache: Record<string, StoreDetail> = {},
+  callback: (area: any, item: any) => string
+) {
   const spinner = ora('Begin handle API of No BOSS').start()
   type Params = { path: string, timestamp: number }
 
@@ -153,8 +160,8 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
       }
    }
 
-    list.forEach((it: any) => {
-      const p = it.place ?? []
+    list.forEach((area: any) => {
+      const p = area.place ?? []
 
       p.forEach((place: any) => {
         spinner.start(`Process: ${place.title}`)
@@ -176,7 +183,7 @@ export async function noBossConvert(appId: string, appVersion: string, store: nu
         records.push({
           id: place.pid + '',
           address: place.title,
-          type: it.title,
+          type: callback(area, place),
           appointRecords
         })
       })
