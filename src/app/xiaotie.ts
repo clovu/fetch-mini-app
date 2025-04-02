@@ -36,62 +36,64 @@ const userToken = process.env.XIAOTIE_TOKEN as string
 
 const spinner = ora('Begin handle API of XiaoTie').start()
 
-async function getXiaotieStores() {
+async function getXiaotieStores(cityNames: string[]) {
   spinner.start('Fetch: XiaoTie store list API')
 
   const URL = '/api/client/info/sites/'
 
   const { md5: sign, timestamp } = getSign()
 
-  const paramJson = {
-    city: '广州市',
-    latitude: '38.7946',
-    longitude: '106.5348',
-    refresh: true,
-    limit: 10,
-    skip: 0
-  }
-
   let records: Store[] = []
-  let pageNum = 1
 
-  for (; ;) {
-    spinner.info(`Fetch: Page ${pageNum}`)
-    pageNum++;
+  for (const city of cityNames) {
+    const paramJson = {
+      city,
+      latitude: '38.7946',
+      longitude: '106.5348',
+      refresh: true,
+      limit: 10,
+      skip: 0
+    }
+    let pageNum = 1
 
-    paramJson.limit += 10
-    paramJson.skip += 10
-    const params = qs.stringify(paramJson)
+    for (; ;) {
+      spinner.info(`Fetch: Page ${pageNum}`)
+      pageNum++;
 
-    // 服务器喘口气
-    await sleep(200)
-    const resp = await fetch(`${BASE_URL}${URL}?${params}`, {
-      method: 'GET',
-      headers: {
-        authorization: 'Motern '.concat(userToken),
-        sign,
-        timestamp: timestamp.toString(),
-        'xi-app-id': '0a60f00b28c849d3ac529994f98b825f'
-      },
-      hostname: 'table-api.xironiot.com',
-    })
+      paramJson.limit += 10
+      paramJson.skip += 10
+      const params = qs.stringify(paramJson)
+
+      // 服务器喘口气
+      await sleep(200)
+      const resp = await fetch(`${BASE_URL}${URL}?${params}`, {
+        method: 'GET',
+        headers: {
+          authorization: 'Motern '.concat(userToken),
+          sign,
+          timestamp: timestamp.toString(),
+          'xi-app-id': '0a60f00b28c849d3ac529994f98b825f'
+        },
+        hostname: 'table-api.xironiot.com',
+      })
 
 
-    const json = await resp.json() as any
+      const json = await resp.json() as any
 
-    if (json.Results == void 0)
-      break
+      if (json.Results == void 0)
+        break
 
-    const results = json.Results as any[]
+      const results = json.Results as any[]
 
-    const stores = results.map<Store>(it => ({
-      address: it.address,
-      city: it.city,
-      id: it.node_id,
-      name: it.name
-    })).filter(it => it.id)
+      const stores = results.map<Store>(it => ({
+        address: it.address,
+        city: it.city,
+        id: it.node_id,
+        name: it.name
+      })).filter(it => it.id)
 
-    records = [...records, ...stores]
+      records = [...records, ...stores]
+    }
   }
   spinner.info(`Fetch: Store data retrieval completed, a total of ${records.length} piece of data`)
   spinner.succeed('Sotre fetch successful...')
@@ -146,8 +148,8 @@ async function getTableById(id: string) {
   return result
 }
 
-export async function xiaotieConvert(cache: Record<string, StoreDetail> = {}) {
-  const result = await mergeDetail(cache, getXiaotieStores, getTableById)
+export async function xiaotieConvert(cache: Record<string, StoreDetail> = {}, city: string[]) {
+  const result = await mergeDetail(cache, () => getXiaotieStores(city), getTableById)
   spinner.info('XiaoTie Processing completed')
   spinner.stop()
 

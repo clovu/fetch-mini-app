@@ -4,7 +4,7 @@ import { xiaotieConvert } from './xiaotie'
 
 export const appList = [
   {
-    excutor: xiaotieConvert,
+    excutor: (c: any) => xiaotieConvert(c, ['广州市', '佛山市']),
     name: 'xiaotie',
     brand: 1,
     duration: 0.5
@@ -23,6 +23,7 @@ export const appList = [
         12393,
         8674,
         c,
+        [20, 757],
         (area, it) =>
           String(area.title).indexOf('台') > -1 ? '台球' : '棋牌'
         ,),
@@ -31,7 +32,7 @@ export const appList = [
     duration: 1
   },
   {
-    excutor: (c: any) => noBossConvert('wxe1ac0b5394d398d9', '3.114.3', 20548, 34412, c, (area) => area.title),
+    excutor: (c: any) => noBossConvert('wxe1ac0b5394d398d9', '3.114.3', 20548, 34412, c,[20], (area) => area.title),
     name: 'xiaoye',
     brand: 4,
     duration: 1

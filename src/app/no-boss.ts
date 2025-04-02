@@ -22,6 +22,7 @@ export async function noBossConvert(
   store: number,
   mid: number,
   cache: Record<string, StoreDetail> = {},
+  cityList: number[],
   callback: (area: any, item: any) => string
 ) {
   const spinner = ora('Begin handle API of No BOSS').start()
@@ -37,6 +38,7 @@ export async function noBossConvert(
 
   const BASE_URL = 'https://api.5laoban.com'
 
+
   async function getStoreList() {
     spinner.start('Fetch: No BOSS store list API')
 
@@ -45,53 +47,57 @@ export async function noBossConvert(
 
     const appletToken = genAppletToken({ path: URI, timestamp })
 
-    let pageNum = 1
-
     const records: Store[] = []
 
-    for (; ;) {
-      spinner.info(`Fetch: Page ${pageNum}`)
+    for (const citycode of cityList) {
+      let pageNum = 1
 
-      const formData = new FormData()
+      const cityName = Reflect.get(cityMap, citycode + '') ?? '🤷'
 
-      formData.set('timestamp_private', timestamp)
-      formData.set('store', store)
-      formData.set('mid', mid)
-      formData.set('citycode', 20)
-      formData.set('page', pageNum)
-      formData.set('limit', 20)
+      for (; ;) {
+        spinner.info(`Fetch: Page ${pageNum}`)
 
-      // 服务器喘口气
-      await sleep(200)
-      const resp = await fetch(BASE_URL + URI, {
-        method: 'POST',
-        headers: {
-          'applet-token': appletToken,
-          'wxappid': appId,
-          'version': appVersion
-        },
-        body: formData,
-        verbose: true
-      })
+        const formData = new FormData()
+
+        formData.set('timestamp_private', timestamp)
+        formData.set('store', store)
+        formData.set('mid', mid)
+        formData.set('citycode', citycode)
+        formData.set('page', pageNum)
+        formData.set('limit', 20)
+
+        // 服务器喘口气
+        await sleep(200)
+        const resp = await fetch(BASE_URL + URI, {
+          method: 'POST',
+          headers: {
+            'applet-token': appletToken,
+            'wxappid': appId,
+            'version': appVersion
+          },
+          body: formData,
+          verbose: true
+        })
 
 
 
-      const json: any = await resp.json()
-      const list = json.result.list ?? []
-      if (isEmptyArr(list))
-        break
+        const json: any = await resp.json()
+        const list = json.result.list ?? []
+        if (isEmptyArr(list))
+          break
 
-      list.forEach((it: any) => {
-        if (it.name.indexOf('筹备中') === -1)
-          records.push({
-            id: it.sid + '',
-            name: it.name,
-            address: it.address,
-            city: '广州市'
-          })
-      })
+        list.forEach((it: any) => {
+          if (it.name.indexOf('筹备中') === -1)
+            records.push({
+              id: it.sid + '',
+              name: it.name,
+              address: it.address,
+              city: cityName
+            })
+        })
 
-      pageNum++
+        pageNum++
+      }
     }
 
     spinner.info(`Fetch: Store data retrieval completed, a total of ${records.length} piece of data`)
@@ -156,9 +162,9 @@ export async function noBossConvert(
         const resp = await getArea(store, id)
         const json: any = await resp.json()
         const area = json.result.area ?? []
-        list.push(...area)       
+        list.push(...area)
       }
-   }
+    }
 
     list.forEach((area: any) => {
       const p = area.place ?? []
@@ -211,4 +217,71 @@ function getTimeAndState(timeline: any) {
 
   if (timeline === '次') return '次'
   return timeline + ':00'
+}
+
+
+const cityMap = {
+  "20": "广州市",
+  "23": "重庆市",
+  "25": "南京市",
+  "27": "武汉市",
+  "28": "成都市",
+  "312": "保定市",
+  "316": "廊坊市",
+  "319": "邢台市",
+  "349": "朔州市",
+  "359": "运城市",
+  "370": "商丘市",
+  "512": "苏州市",
+  "536": "潍坊市",
+  "570": "衢州市",
+  "571": "杭州市",
+  "574": "宁波市",
+  "577": "温州市",
+  "591": "福州市",
+  "592": "厦门市",
+  "593": "宁德市",
+  "594": "莆田市",
+  "595": "泉州市",
+  "598": "三明市",
+  "599": "南平市",
+  "663": "揭阳市",
+  "668": "茂名市",
+  "712": "孝感市",
+  "716": "荆州市",
+  "733": "株洲市",
+  "734": "衡阳市",
+  "737": "益阳市",
+  "739": "邵阳市",
+  "750": "江门市",
+  "751": "韶关市",
+  "752": "惠州市",
+  "753": "梅州市",
+  "755": "深圳市",
+  "756": "珠海市",
+  "757": "佛山市",
+  "758": "肇庆市",
+  "759": "湛江市",
+  "760": "中山市",
+  "762": "河源市",
+  "763": "清远市",
+  "769": "东莞市",
+  "771": "南宁市",
+  "774": "梧州市",
+  "775": "玉林市",
+  "777": "钦州市",
+  "779": "北海市",
+  "790": "新余市",
+  "791": "南昌市",
+  "793": "上饶市",
+  "795": "宜春市",
+  "851": "贵阳市",
+  "855": "黔东南苗族侗族自治州",
+  "859": "黔西南布依族苗族自治州",
+  "871": "昆明市",
+  "1755": "贵港市",
+  "1771": "崇左市",
+  "1772": "来宾市",
+  "1774": "贺州市",
+  "2728": "潜江市"
 }
