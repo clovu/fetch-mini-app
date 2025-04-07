@@ -167,9 +167,10 @@ class ReportService {
 
     datasource.push([brand.brand, '店铺位置', '类型', '桌数', ...columns])
 
-    for (const store of stores) {
-      await this.processStore(store, datasource, startDate, endDate)
-    }
+    await Promise.all(stores.map(store => this.processStore(store, datasource, startDate, endDate)) )
+    // for (const store of stores) {
+    //   await this.processStore(store, datasource, startDate, endDate)
+    // }
 
     return datasource
   }
