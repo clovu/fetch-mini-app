@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "pnpm mvdb && next build",
     "start": "bun --bun run next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mvdb": "cp ../data/.sqlite .sqlite"
   },
   "dependencies": {
     "@radix-ui/react-popover": "^1.1.6",
