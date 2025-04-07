@@ -101,6 +101,20 @@ function getStoreAppintDurations(store_id: string, type: number) {
   })
 }
 
+function getTableCountByType(storeId: string, type: number) {
+  return new Promise<number>((resolve, reject) => {
+    const stmt = db.prepare(`
+      SELECT COUNT(*) as count
+      FROM store_table
+      WHERE store_id = ? AND type = ?
+    `)
+    stmt.get<{ count: number }>([storeId, type], (err, row) => {
+      if (err) reject(err)
+      else resolve(row ? row.count : 0)
+    })
+  })
+}
+
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
@@ -116,14 +130,18 @@ export default function handler(
       const columns = await getBrandDate(brand.brand_id)
       const stores = await getStoreByBrand(brand.brand_id)
       // 查看品牌日期列
-      datasource.push([brand.brand, '店铺位置', '类型', ...columns])
+      datasource.push([brand.brand, '店铺位置', '类型', '桌数', ...columns])
       for (const store of stores) {
         const list = await getStoreAppintDurations(store.id, 1)
         const list2 = await getStoreAppintDurations(store.id, 2)
-        if (list.length > 0)
-          datasource.push([store.name, store.address, '台球', ...list.map(it => it.record_count + '')])
-        if (list2.length > 0)
-          datasource.push([store.name, store.address, '棋牌', ...list2.map(it => it.record_count + '')])
+        if (list.length > 0) {
+          const count = await getTableCountByType(store.id, 1)
+          datasource.push([store.name, store.address, '台球', count + '', ...list.map(it => it.record_count + '')])
+        }
+        if (list2.length > 0) {
+          const count = await getTableCountByType(store.id, 2)
+          datasource.push([store.name, store.address, '棋牌', count + '', ...list2.map(it => it.record_count + '')])
+        }
       }
 
       datasource.push([])
