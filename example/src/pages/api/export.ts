@@ -53,7 +53,7 @@ const SQL = {
   APPOINTMENT_DURATION: (start?: string, end?: string) => `
     SELECT
       strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) dt,
-      COUNT(*) * duration AS record_count
+      COUNT(1) * duration AS record_count
     FROM appoint_record
     JOIN store ON appoint_record.store_id = store.id
     LEFT JOIN store_table ON store.id = store_table.store_id 
@@ -66,7 +66,7 @@ const SQL = {
   `,
 
   TABLE_COUNT: `
-    SELECT COUNT(*) as count
+    SELECT COUNT(1) as count
     FROM store_table
     WHERE store_id = ? AND type = ?
   `

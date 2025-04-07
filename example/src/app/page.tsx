@@ -21,10 +21,12 @@ export default function Home() {
     const from = (date?.from?.getTime() ?? 0) / 1e3
     const to = (date?.to?.getTime() ?? from) / 1e3
 
-    const params = new URLSearchParams({
-      startDate: String(from),
-      endDate: String(to),
-    });
+    const params = new URLSearchParams();
+
+    if (from > 0) {
+      params.append('startDate', String(from))
+      params.append('endDate', String(to))
+    }
 
     try {
       setLoading(true);
