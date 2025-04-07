@@ -1,9 +1,5 @@
 // import { Database } from "bun:sqlite";
-// import { cwd } from 'node:process'
-// import { join } from 'node:path'
 
-// const root = cwd()
-// const databasePath = join(root, '../data/.sqlite')
 
 // console.log(databasePath);
 
@@ -66,4 +62,9 @@
 // // }
 
 import sqlite3 from 'sqlite3'
-export const db = new sqlite3.Database("/Users/clovu/projects/i/fetch-mini-app/data/.sqlite")
+import { cwd } from 'node:process'
+import { join } from 'node:path'
+
+const root = cwd()
+const databasePath = join(root, '.sqlite')
+export const db = new sqlite3.Database(databasePath)
