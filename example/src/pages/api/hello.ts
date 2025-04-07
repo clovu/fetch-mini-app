@@ -33,19 +33,26 @@ function getBrandList() {
   })
 }
 
+function buildColumnsSql(s?: string, e?: string) {
+  let condition = `WHERE store.brand = ?`
 
-const COLUMNS_SQL = `
+  if (s && e)
+    condition += ` AND use_time BETWEEN ? AND ?`
+  return `
 SELECT DISTINCT strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) use_time
 FROM appoint_record
 LEFT JOIN store ON appoint_record.store_id = store.id
-WHERE store.brand = ?
+${condition}
 ORDER BY use_time
 `
-function getBrandDate(id: number) {
+}
+
+
+function getBrandDate(id: number, sd?: string, ed?: string) {
   return new Promise<string[]>((resolve, reject) => {
-    const stmt = db.prepare(COLUMNS_SQL)
+    const stmt = db.prepare(buildColumnsSql(sd, ed))
     stmt.run(id)
-    stmt.all<{ use_time: string }>([id], (err, list) => {
+    stmt.all<{ use_time: string }>([id, sd, ed], (err, list) => {
       if (err) reject(err)
       else resolve(list.map(it => it.use_time))
     })
@@ -68,17 +75,14 @@ function getStoreByBrand(brand: number) {
   })
 }
 
-// const STORE_APPINT_DURATION = `
-// SELECT
-//     strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) dt,
-//     -- duration 表示这个数据多久更新一次，1 表示一个小时
-//     COUNT(*) * duration AS record_count  FROM appoint_record
-// LEFT JOIN store ON appoint_record.store_id = store.id
-// WHERE store_id = ?
-// GROUP BY dt
-// ORDER BY dt
-// `
-const STORE_APPINT_DURATION = `
+function buildStoreAppintDurationSql(store_id: string, type: number, start?: string, end?: string) {
+  let condition = `WHERE appoint_record.store_id = ? AND store_table.type = ?`
+
+  if (start && end) {
+    condition += ` AND use_time BETWEEN ? AND ?`
+  }
+
+  return `
 SELECT
     strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) dt,
     -- duration 表示这个数据多久更新一次，1 表示一个小时
@@ -86,15 +90,16 @@ SELECT
 FROM appoint_record
 JOIN store ON appoint_record.store_id = store.id
 LEFT JOIN store_table on store.id = store_table.store_id and store_table.id = appoint_record.table_id
-WHERE appoint_record.store_id = ? AND store_table.type = ?
+${condition}
 GROUP BY dt
 ORDER BY dt
-`
+  `
+}
 
-function getStoreAppintDurations(store_id: string, type: number) {
+function getStoreAppintDurations(store_id: string, type: number, start?: string, end?: string) {
   return new Promise<{ dt: string, record_count: number, table_type: string }[]>((resolve, reject) => {
-    const stmt = db.prepare(STORE_APPINT_DURATION)
-    stmt.all<{ dt: string, record_count: number, table_type: string }>([store_id, type], (err, list) => {
+    const stmt = db.prepare(buildStoreAppintDurationSql(store_id, type, start, end))
+    stmt.all<{ dt: string, record_count: number, table_type: string }>([store_id, type, start, end], (err, list) => {
       if (err) reject(err)
       else resolve(list)
     })
@@ -119,6 +124,9 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
+  const startDate = Array.isArray(req.query.startDate) ? req.query.startDate[0] : req.query.startDate
+  const endDate = Array.isArray(req.query.endDate) ? req.query.endDate[0] : req.query.endDate
+
   db.serialize(async () => {
     // 查询有哪些品牌
     const list = await getBrandList()
@@ -127,13 +135,13 @@ export default function handler(
 
     for (const brand of list) {
       const datasource: string[][] = []
-      const columns = await getBrandDate(brand.brand_id)
+      const columns = await getBrandDate(brand.brand_id, startDate, endDate)
       const stores = await getStoreByBrand(brand.brand_id)
       // 查看品牌日期列
       datasource.push([brand.brand, '店铺位置', '类型', '桌数', ...columns])
       for (const store of stores) {
-        const list = await getStoreAppintDurations(store.id, 1)
-        const list2 = await getStoreAppintDurations(store.id, 2)
+        const list = await getStoreAppintDurations(store.id, 1, startDate, endDate)
+        const list2 = await getStoreAppintDurations(store.id, 2, startDate, endDate)
         if (list.length > 0) {
           const count = await getTableCountByType(store.id, 1)
           datasource.push([store.name, store.address, '台球', count + '', ...list.map(it => it.record_count + '')])
