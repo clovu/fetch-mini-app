@@ -17,7 +17,7 @@ export default async function handler(
 
     const buffer = await ReportService.generateReport(startDate, endDate)
 
-    res.setHeader('Content-Disposition', 'attachment; filename="data.xlsx"')
+    res.setHeader('Content-Disposition', 'attachment; filename="analyze-data.xlsx"')
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     res.send(buffer)
   } catch (error) {

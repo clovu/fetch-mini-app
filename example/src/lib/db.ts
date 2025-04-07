@@ -1,6 +1,7 @@
 import sqlite3 from 'sqlite3'
 import { cwd } from 'node:process'
 import { join } from 'node:path'
+import * as mathjs from 'mathjs'
 
 import XLSX from 'xlsx'
 
@@ -82,7 +83,7 @@ class DatabaseService {
 
   static async getBrandDates(id: number, start?: string, end?: string): Promise<string[]> {
     const results = await this.query<{ use_time: string }>(
-      SQL.BRAND_DATES(start, end), 
+      SQL.BRAND_DATES(start, end),
       [id, ...(start && end ? [start, end] : [])]
     )
     return results.map(it => it.use_time)
@@ -93,9 +94,9 @@ class DatabaseService {
   }
 
   static async getAppointmentDurations(
-    storeId: string, 
-    type: number, 
-    start?: string, 
+    storeId: string,
+    type: number,
+    start?: string,
     end?: string
   ): Promise<AppointmentDuration[]> {
     return this.query<AppointmentDuration>(
@@ -158,6 +159,37 @@ export class ReportService {
     return exporter.getBuffer()
   }
 
+  static async generateOpeningRateReport(startDate?: string, endDate?: string) {
+    const exporter = new ExcelExporter()
+    const brands = await DatabaseService.getBrandList()
+
+    for (const brand of brands) {
+      const data = await this.processBrandOpeningRate(brand, startDate, endDate)
+      exporter.addBrandSheet(brand, data)
+    }
+
+    return exporter.getBuffer()
+  }
+
+  private static async processBrandOpeningRate(
+    brand: Brand,
+    startDate?: string,
+    endDate?: string
+  ): Promise<string[][]> {
+    const datasource: string[][] = []
+    const columns = await DatabaseService.getBrandDates(brand.brand_id, startDate, endDate)
+    const stores = await DatabaseService.getStoresByBrand(brand.brand_id)
+
+    datasource.push([brand.brand, '店铺位置', '类型', '桌数', ...columns])
+
+    // await Promise.all(stores.map(store => this.processStore(store, datasource, startDate, endDate)) )
+    for (const store of stores) {
+      await this.processStoreOpeningRate(store, datasource, startDate, endDate)
+    }
+
+    return datasource
+  }
+
   private static async processBrand(
     brand: Brand,
     startDate?: string,
@@ -177,6 +209,42 @@ export class ReportService {
     return datasource
   }
 
+  private static async processStoreOpeningRate(
+    store: StoreByBrand,
+    datasource: string[][],
+    startDate?: string,
+    endDate?: string
+  ) {
+    const processType = async (type: number) => {
+      const durations = await DatabaseService.getAppointmentDurations(
+        store.id,
+        type,
+        startDate,
+        endDate
+      )
+
+      if (durations.length > 0) {
+        const count = await DatabaseService.getTableCount(store.id, type)
+        datasource.push([
+          store.name,
+          store.address,
+          getTextByType(type),
+          `${count}`,
+          ...durations.map(it => {
+            if (count === 0) return ''
+            const totalHours = 24 * count
+            return mathjs.round(
+              mathjs.bignumber(it.record_count).div(totalHours).mul(100),
+              2
+            ).toString() + '%'
+          })
+        ])
+      }
+    }
+
+    await Promise.all([processType(1), processType(2)])
+  }
+
   private static async processStore(
     store: StoreByBrand,
     datasource: string[][],
@@ -185,9 +253,9 @@ export class ReportService {
   ) {
     const processType = async (type: number) => {
       const durations = await DatabaseService.getAppointmentDurations(
-        store.id, 
-        type, 
-        startDate, 
+        store.id,
+        type,
+        startDate,
         endDate
       )
 
