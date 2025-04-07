@@ -57,9 +57,21 @@ export default function Home() {
     }
   }
 
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <Toaster />
+  function openingRate() {
+
+  }
+
+  return <>
+    <Toaster />
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="flex gap-2">
+        <DatePickerWithRange date={date} onChangeDate={setDate} />
+        <Button onClick={exportExcel} disabled={loading}>
+          Export
+          {loading && <Loader2Icon className="animate-spin" />}
+        </Button>
+      </div>
+
       <div className="flex gap-2">
         <DatePickerWithRange date={date} onChangeDate={setDate} />
         <Button onClick={exportExcel} disabled={loading}>
@@ -68,5 +80,5 @@ export default function Home() {
         </Button>
       </div>
     </div>
-  );
+  </>
 }
