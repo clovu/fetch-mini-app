@@ -232,11 +232,10 @@ export class ReportService {
           `${count}`,
           ...durations.map(it => {
             if (count === 0) return ''
-            const totalHours = 24 * count
             return mathjs.round(
-              mathjs.bignumber(it.record_count).div(totalHours).mul(100),
+              mathjs.bignumber(it.record_count).div(count),
               2
-            ).toString() + '%'
+            ).toString()
           })
         ])
       }
