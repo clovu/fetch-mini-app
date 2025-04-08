@@ -28,8 +28,8 @@ export function ExportExcel({
     const params = new URLSearchParams();
 
     if (from > 0) {
-      params.append('startDate', String(from))
-      params.append('endDate', String(to))
+      params.append('startDate', from.toFixed())
+      params.append('endDate', to.toFixed())
     }
 
     try {

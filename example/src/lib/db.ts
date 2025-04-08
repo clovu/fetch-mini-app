@@ -9,6 +9,9 @@ const root = cwd()
 const databasePath = join(root, '.sqlite')
 export const db = new sqlite3.Database(databasePath)
 
+db.on('trace', (sql) => {
+  console.debug('Executing SQL:', sql)
+})
 
 interface Brand {
   brand_id: number
@@ -25,6 +28,7 @@ interface AppointmentDuration {
   dt: string
   record_count: number
   table_type: string
+  store_id: string
 }
 
 // SQL 查询集中管理
@@ -53,25 +57,28 @@ const SQL = {
 
   STORES_BY_BRAND: 'SELECT name, id, address FROM store WHERE brand = ?',
 
-  APPOINTMENT_DURATION: (start?: string, end?: string) => `
+  APPOINTMENT_DURATION: (ids: string[], type: number[], start?: string, end?: string) => `
     SELECT
       strftime('%Y-%m-%d', datetime(use_time, 'unixepoch')) dt,
-      COUNT(1) * duration AS record_count
+      COUNT(1) * duration AS record_count,
+      appoint_record.store_id,
+      store_table.type AS table_type
     FROM appoint_record
     JOIN store ON appoint_record.store_id = store.id
     LEFT JOIN store_table ON store.id = store_table.store_id 
       AND store_table.id = appoint_record.table_id
-    WHERE appoint_record.store_id = ? 
-      AND store_table.type = ?
+    WHERE appoint_record.store_id in (${ids.map(() => '?').join(',')})
+      AND store_table.type in (${type.map(() => '?').join(',')})
       ${start && end ? 'AND use_time BETWEEN ? AND ?' : ''}
-    GROUP BY dt
+    GROUP BY dt, appoint_record.store_id
     ORDER BY dt
   `,
 
-  TABLE_COUNT: `
-    SELECT COUNT(1) as count
+  TABLE_COUNT: (ids: string[], type: number[]) => `
+    SELECT COUNT(1) as count, store_id
     FROM store_table
-    WHERE store_id = ? AND type = ?
+    WHERE store_id in (${ids.map(() => '?').join(',')}) AND type in (${type.map(() => '?').join(',')})
+    GROUP BY store_id, store_id
   `
 }
 
@@ -94,27 +101,30 @@ class DatabaseService {
   }
 
   static async getAppointmentDurations(
-    storeId: string,
-    type: number,
+    ids: string[],
+    tps: number[],
     start?: string,
     end?: string
   ): Promise<AppointmentDuration[]> {
     return this.query<AppointmentDuration>(
-      SQL.APPOINTMENT_DURATION(start, end),
-      [storeId, type, ...(start && end ? [start, end] : [])]
+      SQL.APPOINTMENT_DURATION(ids, tps, start, end),
+      [...ids, ...tps, ...(start && end ? [start, end] : [])]
     )
   }
 
-  static async getTableCount(storeId: string, type: number): Promise<number> {
-    const result = await this.query<{ count: number }>(SQL.TABLE_COUNT, [storeId, type])
-    return result[0]?.count || 0
+  static async getTableCount(ids: string[], tps: number[]): Promise<Record<string, number>> {
+    const result = await this.query<{ count: number, store_id: string }>(SQL.TABLE_COUNT(ids, tps), [...ids, ...tps])
+    return result.reduce((acc, it) => {
+      acc[it.store_id] = it.count
+      return acc
+    }, {} as Record<string, number>)
   }
 
   private static query<T>(sql: string, params: unknown[] = []): Promise<T[]> {
     return new Promise((resolve, reject) => {
-      db.all(sql, params, (err, rows) => {
+      db.all<T>(sql, params, (err, rows) => {
         if (err) reject(err)
-        else resolve(rows as T[])
+        else resolve(rows)
       })
     })
   }
@@ -143,6 +153,17 @@ function getTextByType(type: number): string {
     default:
       return '未知类型'
   }
+}
+
+function group<T extends object>(list: T[], key: string) {
+  return list.reduce((acc, it) => {
+    const keyVal = Reflect.get(it, key) as PropertyKey
+    if (!Reflect.has(acc, keyVal))
+      Reflect.set(acc, keyVal, [])
+    const list = Reflect.get(acc, keyVal)
+    list.push(it)
+    return acc
+  }, {} as Record<string, T[]>)
 }
 
 // 业务逻辑处理
@@ -183,9 +204,9 @@ export class ReportService {
     datasource.push([brand.brand, '店铺位置', '类型', '桌数', ...columns])
 
     // await Promise.all(stores.map(store => this.processStore(store, datasource, startDate, endDate)) )
-    for (const store of stores) {
-      await this.processStoreOpeningRate(store, datasource, startDate, endDate)
-    }
+    // for (const store of stores) {
+    // }
+    await this.processStoreOpeningRate(stores, datasource, startDate, endDate)
 
     return datasource
   }
@@ -201,76 +222,126 @@ export class ReportService {
 
     datasource.push([brand.brand, '店铺位置', '类型', '桌数', ...columns])
 
-    // await Promise.all(stores.map(store => this.processStore(store, datasource, startDate, endDate)) )
-    for (const store of stores) {
-      await this.processStore(store, datasource, startDate, endDate)
-    }
+    // for (const store of stores) {
+    // }
+    await this.processStore(stores, datasource, startDate, endDate)
 
     return datasource
   }
 
   private static async processStoreOpeningRate(
-    store: StoreByBrand,
+    stores: StoreByBrand[],
     datasource: string[][],
     startDate?: string,
     endDate?: string
   ) {
-    const processType = async (type: number) => {
-      const durations = await DatabaseService.getAppointmentDurations(
-        store.id,
-        type,
-        startDate,
-        endDate
-      )
+    const tps = [1, 2]
+    const ids = stores.map(it => it.id)
+    const durations = await DatabaseService.getAppointmentDurations(
+      ids,
+      tps,
+      startDate,
+      endDate
+    )
 
-      if (durations.length > 0) {
-        const count = await DatabaseService.getTableCount(store.id, type)
-        datasource.push([
-          store.name,
-          store.address,
-          getTextByType(type),
-          `${count}`,
-          ...durations.map(it => {
-            if (count === 0) return ''
-            return mathjs.round(
-              mathjs.bignumber(it.record_count).div(count),
-              2
-            ).toString()
-          })
-        ])
+
+    if (durations.length > 0) {
+      const groupById = group(durations, 'store_id')
+      const counts = await DatabaseService.getTableCount(ids, tps)
+
+      // 根据类型进行分组
+
+      for (const storeId in groupById) {
+        const durations = Reflect.get(groupById, storeId)
+        const store = stores.find(it => it.id === storeId)
+        if (!store) continue
+
+        const groupBytype = group(durations, 'table_type')
+        for (const type in groupBytype) {
+            const list = Reflect.get(groupBytype, type)
+            const count = counts[storeId] || 0
+
+            datasource.push([
+              store.name,
+              store.address,
+              getTextByType(Number(type)),
+              `${count}`,
+              ...list.map(it => {
+                if (count === 0) return ''
+                return mathjs.round(
+                  mathjs.bignumber(it.record_count).div(count),
+                  2
+                ).toString()
+              })
+            ])
+        }
       }
     }
-
-    await Promise.all([processType(1), processType(2)])
   }
 
   private static async processStore(
-    store: StoreByBrand,
+    stores: StoreByBrand[],
     datasource: string[][],
     startDate?: string,
     endDate?: string
   ) {
-    const processType = async (type: number) => {
-      const durations = await DatabaseService.getAppointmentDurations(
-        store.id,
-        type,
-        startDate,
-        endDate
-      )
+    const tps = [1, 2]
+    const ids = stores.map(it => it.id)
+    const durations = await DatabaseService.getAppointmentDurations(
+      ids,
+      tps,
+      startDate,
+      endDate
+    )
 
-      if (durations.length > 0) {
-        const count = await DatabaseService.getTableCount(store.id, type)
-        datasource.push([
-          store.name,
-          store.address,
-          getTextByType(type),
-          `${count}`,
-          ...durations.map(it => `${it.record_count}`)
-        ])
+
+    if (durations.length > 0) {
+      const groupById = group(durations, 'store_id')
+      const counts = await DatabaseService.getTableCount(ids, tps)
+
+      // 根据类型进行分组
+
+      for (const storeId in groupById) {
+        const durations = Reflect.get(groupById, storeId)
+        const store = stores.find(it => it.id === storeId)
+        if (!store) continue
+
+        const groupBytype = group(durations, 'table_type')
+        for (const type in groupBytype) {
+            const list = Reflect.get(groupBytype, type)
+            const count = counts[storeId] || 0
+
+            datasource.push([
+              store.name,
+              store.address,
+              getTextByType(Number(type)),
+              `${count}`,
+              ...list.map(it => `${it.record_count}`)
+            ])
+        }
       }
     }
+    // const processType = async (type: number) => {
+    //   const durations = await DatabaseService.getAppointmentDurations(
+    //     store.id,
+    //     type,
+    //     startDate,
+    //     endDate
+    //   )
 
-    await Promise.all([processType(1), processType(2)])
+    //   if (durations.length > 0) {
+    //     const count = await DatabaseService.getTableCount(store.id, type)
+    //     datasource.push([
+    //       store.name,
+    //       store.address,
+    //       getTextByType(type),
+    //       `${count}`,
+    //       ...durations.map(it => `${it.record_count}`)
+    //     ])
+    //   }
+    // }
+
+    // await Promise.all([processType(1), processType(2)])
   }
 }
 
