@@ -25,7 +25,9 @@ export function ExportExcel({
     const from = (date?.from?.getTime() ?? 0) / 1e3
     const to = (date?.to?.getTime() ?? from) / 1e3
 
-    const params = new URLSearchParams();
+    const params = new URLSearchParams({
+      t: new Date().getTime().toString()
+    });
 
     if (from > 0) {
       params.append('startDate', from.toFixed())
