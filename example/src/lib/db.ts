@@ -70,7 +70,7 @@ const SQL = {
     WHERE appoint_record.store_id in (${ids.map(() => '?').join(',')})
       AND store_table.type in (${type.map(() => '?').join(',')})
       ${start && end ? 'AND use_time BETWEEN ? AND ?' : ''}
-    GROUP BY dt, appoint_record.store_id
+    GROUP BY dt, appoint_record.store_id, store_table.type
     ORDER BY dt
   `,
 
