@@ -9,9 +9,9 @@ const root = cwd()
 const databasePath = join(root, '.sqlite')
 export const db = new sqlite3.Database(databasePath)
 
-db.on('trace', (sql) => {
-  console.debug('Executing SQL:', sql)
-})
+// db.on('trace', (sql) => {
+//   console.debug('Executing SQL:', sql)
+// })
 
 interface Brand {
   brand_id: number
@@ -75,10 +75,10 @@ const SQL = {
   `,
 
   TABLE_COUNT: (ids: string[], type: number[]) => `
-    SELECT COUNT(1) as count, store_id
+    SELECT COUNT(1) as count, store_id, type
     FROM store_table
     WHERE store_id in (${ids.map(() => '?').join(',')}) AND type in (${type.map(() => '?').join(',')})
-    GROUP BY store_id, store_id
+    GROUP BY store_id, store_id, type
   `
 }
 
@@ -113,9 +113,9 @@ class DatabaseService {
   }
 
   static async getTableCount(ids: string[], tps: number[]): Promise<Record<string, number>> {
-    const result = await this.query<{ count: number, store_id: string }>(SQL.TABLE_COUNT(ids, tps), [...ids, ...tps])
+    const result = await this.query<{ count: number, store_id: string, type: number }>(SQL.TABLE_COUNT(ids, tps), [...ids, ...tps])
     return result.reduce((acc, it) => {
-      acc[it.store_id] = it.count
+      acc[it.store_id + '-' + it.type] = it.count
       return acc
     }, {} as Record<string, number>)
   }
@@ -259,7 +259,7 @@ export class ReportService {
         const groupBytype = group(durations, 'table_type')
         for (const type in groupBytype) {
             const list = Reflect.get(groupBytype, type)
-            const count = counts[storeId] || 0
+            const count = counts[storeId + '-' + type] || 0
 
             datasource.push([
               store.name,
@@ -300,7 +300,6 @@ export class ReportService {
       const counts = await DatabaseService.getTableCount(ids, tps)
 
       // 根据类型进行分组
-
       for (const storeId in groupById) {
         const durations = Reflect.get(groupById, storeId)
         const store = stores.find(it => it.id === storeId)
@@ -309,7 +308,7 @@ export class ReportService {
         const groupBytype = group(durations, 'table_type')
         for (const type in groupBytype) {
             const list = Reflect.get(groupBytype, type)
-            const count = counts[storeId] || 0
+            const count = counts[storeId + '-' + type] || 0
 
             datasource.push([
               store.name,
