@@ -32,7 +32,7 @@ export const appList = [
     duration: 1
   },
   {
-    excutor: (c: any) => noBossConvert('wxe1ac0b5394d398d9', '3.114.3', 20548, 34412, c,[20], (area) => area.title),
+    excutor: (c: any) => noBossConvert('wx3b371ea9390279cc', '3.114.3', 20548, 34412, c,[20], (area) => area.title),
     name: 'xiaoye',
     brand: 4,
     duration: 1
