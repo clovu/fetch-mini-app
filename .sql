@@ -6,6 +6,7 @@ SELECT
         WHEN store.brand = 2 THEN 'KO'
         WHEN store.brand = 3 THEN '麻利友'
         WHEN store.brand = 4 THEN '小野'
+        WHEN store.brand = 5 THEN '碰碰侠'
         ELSE '未知品牌'
     END AS 品牌名,
     store.city AS '城市',
