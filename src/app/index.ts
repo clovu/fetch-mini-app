@@ -4,7 +4,7 @@ import { xiaotieConvert } from './xiaotie'
 
 export const appList = [
   {
-    excutor: (c: any) => xiaotieConvert(c, ['广州市', '佛山市']),
+    excutor: (c: any) => xiaotieConvert(c, ['广州市', '佛山市', '湛江市']),
     name: 'xiaotie',
     brand: 1,
     duration: 0.5
