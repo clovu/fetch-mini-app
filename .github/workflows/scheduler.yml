@@ -1,0 +1,44 @@
+name: Scheduler
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0,30 * * * *'
+
+jobs:
+  update-sponsors:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      # - uses: pnpm/action-setup@v4
+
+      # - name: Set node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: lts/*
+
+      # - run: corepack enable && pnpm i
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          # Domestic Acceleration
+          bun-download-url: https://get-github.hexj.org/download/oven-sh/bun/releases/latest/download/bun-linux-x64.zip
+      - run: git pull
+      - run: bun i
+      - name: Fetch api data
+        env:
+          XIAOTIE_TOKEN: ${{ secrets.XIAOTIE_TOKEN }}
+        run: bun src/index.ts
+
+      - name: Commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: 'chore: fetch data [ci skip]'
+          add: "data"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
